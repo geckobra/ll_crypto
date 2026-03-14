@@ -13,18 +13,22 @@ void hex_dump(const uint8_t *data, size_t len) {
     printf("\n");
 }
 
-void hex_to_raw(char* hex_str, uint8_t* raw_data, size_t hex_size){
-    //convert the hex string to raw bytes
-    size_t raw_size = hex_size/2;
+int hex_val(char c) {
+    if (c >= '0' && c <= '9') return c - '0';
+    if (c >= 'a' && c <= 'f') return c - 'a' + 10;
+    if (c >= 'A' && c <= 'F') return c - 'A' + 10;
+    return -1;
+}
 
-    for(int i = 0; i<raw_size; i++){
-        unsigned int temp = 0;
-
-        if(sscanf(&hex_str[i*2], "%2x", &temp) != 1){
-            break;
-        }
-
-        raw_data[i] = (uint8_t)temp;
+void hex_to_raw(char* hex_str, uint8_t* raw_data, size_t hex_size) {
+    for (size_t i = 0; i < hex_size / 2; i++) {
+        int high = hex_val(hex_str[i * 2]);
+        int low  = hex_val(hex_str[i * 2 + 1]);
+        
+        // If either nibble is invalid, we stop or handle error
+        if (high == -1 || low == -1) break; 
+        
+        raw_data[i] = (uint8_t)((high << 4) | low);
     }
 }
 
