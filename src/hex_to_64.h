@@ -1,6 +1,5 @@
 // the code in this file encodes hex into base64
 #pragma once
-#include <stdio.h>
 #include <unistd.h>
 #include <stdint.h>
 
@@ -14,9 +13,10 @@ void hex_dump(const uint8_t *data, size_t len) {
     printf("\n");
 }
 
-void hex_to_raw(char* hex_str, uint8_t* raw_data, size_t raw_size){
+void hex_to_raw(char* hex_str, uint8_t* raw_data, size_t hex_size){
     //convert the hex string to raw bytes
-    
+    size_t raw_size = hex_size/2;
+
     for(int i = 0; i<raw_size; i++){
         unsigned int temp = 0;
 
@@ -28,10 +28,23 @@ void hex_to_raw(char* hex_str, uint8_t* raw_data, size_t raw_size){
     }
 }
 
+void raw_to_hex(uint8_t* raw_bytes, char* hex_str, size_t raw_size){
+    const char* hex_lookup = "0123456789abcdef";
+    size_t hex_size = raw_size * 2;
+
+    size_t i = 0;
+    for(; i<raw_size; i++){
+        hex_str[i*2] = hex_lookup[(raw_bytes[i] >> 4) & 0x0F];
+        hex_str[i*2+1] = hex_lookup[raw_bytes[i] & 0x0F];
+    }
+
+    hex_str[raw_size*2] = '\0';
+}
+
 void hex_to_base(char* hex_str, char* base64_buf, size_t hex_size){
     //first, the hex string is converted into raw bytes upon which to operate
     uint8_t raw_data[hex_size/2];
-    hex_to_raw(hex_str, raw_data, hex_size/2);
+    hex_to_raw(hex_str, raw_data, hex_size);
     
     //iterate the raw data in chunks of 3 bytes (24 bits) and encode based on that
     int output_index = 0;
@@ -67,6 +80,4 @@ void hex_to_base(char* hex_str, char* base64_buf, size_t hex_size){
     }
 
     base64_buf[output_index] = '\0';
-
-    printf("%s\n", base64_buf);
 }
