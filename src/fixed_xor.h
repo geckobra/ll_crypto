@@ -1,5 +1,4 @@
 #pragma once
-#include <stdio.h>
 #include <unistd.h>
 #include <stdint.h>
 #include "hex_to_64.h"
@@ -19,6 +18,4 @@ void fixed_xor(char* hex_str1, char* hex_str2, size_t ss1) {
 
     char result_hex[ss1 + 1]; 
     raw_to_hex(raw1, result_hex, byte_len);
-
-    printf("%s\n", result_hex);
 }
