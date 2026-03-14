@@ -4,11 +4,11 @@
 #include "hex_to_64.h"
 #include "fixed_xor.h"
 #include "single_byte_XOR.h"
+#include "repeating_key_XOR.h"
 
 #define NUMBER_LINES 327
 
-void main(int argc, char* argv[]){
-
+void test_cipher_XOR(){
     init_frequencies();
 
     double overall_max_score = -90000;
@@ -34,4 +34,17 @@ void main(int argc, char* argv[]){
     }
 
     printf("%s\n", raw_lines[real_line]);
+}
+
+void main(int argc, char* argv[]){
+
+    const char* stanza = 
+        "Burning 'em, if you ain't quick and nimble\n"
+        "I go crazy when I hear a cymbal";
+    
+    char res_str[strlen(stanza)*2];
+
+    encrypt_RKX((uint8_t*)stanza, "ICE", res_str, strlen(stanza));
+
+    printf("%s\n", res_str);
 }
