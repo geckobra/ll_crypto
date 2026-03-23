@@ -5,6 +5,7 @@
 #include "fixed_xor.h"
 #include "single_byte_XOR.h"
 #include "repeating_key_XOR.h"
+#include "base_64_decode.h"
 
 #define NUMBER_LINES 327
 
@@ -38,13 +39,7 @@ void test_cipher_XOR(){
 
 void main(int argc, char* argv[]){
 
-    const char* stanza = 
-        "Burning 'em, if you ain't quick and nimble\n"
-        "I go crazy when I hear a cymbal";
-    
-    char res_str[strlen(stanza)*2];
+    const char* encoded_string = "YW55IGNhcm5hbCBwbGVhc3VyZQ==";
 
-    encrypt_RKX((uint8_t*)stanza, "ICE", res_str, strlen(stanza));
-
-    printf("%s\n", res_str);
+    decode_base64(encoded_string, strlen(encoded_string));
 }
