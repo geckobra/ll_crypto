@@ -2,8 +2,33 @@
 #pragma once
 #include <unistd.h>
 #include <stdint.h>
+#include <string.h>
 
 const char* base64_lookup = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+int count_bits(int value){
+    int ones = 0;
+
+    while(value != 0){
+        value &= (value-1);
+        ones++;
+    }
+
+    return ones;
+}
+
+int hamming_distance(const char* str1, const char* str2){
+    size_t str_length = strlen(str1);
+
+    int hamming_distance = 0;
+    for(int i = 0; i<str_length; i++){
+        int xor_value = str1[i] ^ str2[i];
+
+        hamming_distance += count_bits(xor_value);
+    }
+
+    return hamming_distance;
+}
 
 void hex_dump(const uint8_t *data, size_t len) {
     for (size_t i = 0; i < len; i++) {
